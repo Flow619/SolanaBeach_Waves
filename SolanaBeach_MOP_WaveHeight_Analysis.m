@@ -70,10 +70,10 @@ plot(Data.DateTime(MonthMask),MeanWave.Hs(MonthMask),'o')
 
 %% Initialize Year + Month Mask Figures %%
 
-Winter = figure;    % 
+Winter = figure;    % Winter defined as OCT through JAN
 hold on
 ylim([1.25 4])
-title('Winter','FontSize',22,'FontWeight','bold')
+title('Winter (OCT through JAN)','FontSize',22,'FontWeight','bold')
 yline(3,'r--','HandleVisibility','off','LineWidth',1)
 yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
 yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
@@ -128,60 +128,64 @@ TimeSeries = figure;
 hold on
 plot( Data.DateTime(:,1),  MeanWave.Hs,'color',[0 0 0],'LineWidth',1.5,'HandleVisibility','off')
 ylim([0 4])
+title(['Spatially Averaged Hourly H_{s}',' - MOPs ',num2str(MOPstn(end)),' to ',num2str(MOPstn(1))])
 set(gca,'FontSize',18,'FontWeight','bold')
 
 
-Winter_Hist = figure;
+Winter_Hist = figure;    % Histograms of Hourly Wave Height (spatially averaged); y axis - # hours ; x axis spatially averaged Hs
 title('Winter')
 set(gca,'FontSize',12,'FontWeight','bold')
 
 %%  Plotting  %%
 
-colors = jet(length(2001:2023));
+colors = jet(length(2001:2023));    % Define colormap
 
 for year = 2001:2023
 
     year_prior = year - 2001;
 
-    Oct_Start = posixtime(datetime('2000-10-01 00:00:00') + calyears(year_prior));
+    % Month Start & End Posixtimes
+    Oct_Start = posixtime(datetime('2000-10-01 00:00:00') + calyears(year_prior));   
     Oct_End =   posixtime(datetime('2000-10-31 23:00:00') + calyears(year_prior));
+
     Nov_Start = posixtime(datetime('2000-11-01 00:00:00') + calyears(year_prior));
     Nov_End =   posixtime(datetime('2000-11-30 23:00:00') + calyears(year_prior));
+
     Dec_Start = posixtime(datetime('2000-12-01 00:00:00') + calyears(year_prior));
     Dec_End =   posixtime(datetime('2000-12-31 23:00:00') + calyears(year_prior));
+
     Jan_Start = posixtime(datetime('2001-01-01 00:00:00') + calyears(year_prior));
     Jan_End =   posixtime(datetime('2001-01-31 23:00:00') + calyears(year_prior));
     
 
+    % Montly Plots
     figure(October)
     plot( MeanWave.Hs(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Oct_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
-    % legend
 
-        figure(November)
+    figure(November)
     plot( MeanWave.Hs(Data.Time(:,1) >= Nov_Start & Data.Time(:,1) <= Nov_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
 
-    %legend 
 
-        figure(December)
+    figure(December)
     plot( MeanWave.Hs(Data.Time(:,1) >= Dec_Start & Data.Time(:,1) <= Dec_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
 
-    % legend 
 
-        figure(January)
+    figure(January)
     plot( MeanWave.Hs(Data.Time(:,1) >= Jan_Start & Data.Time(:,1) <= Jan_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
 
-    % legend 
 
-
+    % Winter Plot
     figure(Winter)
     plot( MeanWave.Hs(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Jan_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
     % legend
 
+    % Hs TimeSeries
     figure(TimeSeries)
     plot( Data.DateTime(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Jan_End),  MeanWave.Hs(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Jan_End),'Color', [colors(year_prior+1,:)],'LineWidth',2,'DisplayName', [num2str(year-1),'-', num2str(year)])
     leg = legend;
     set(leg,'FontSize',11,'FontWeight','bold')
 
+    % 'Winter' Hs Histograms
     figure(Winter_Hist)
     subplot(6,4,year_prior+1)
     histogram( MeanWave.Hs(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Jan_End) , 'FaceColor', [colors(year_prior+1,:)] )
