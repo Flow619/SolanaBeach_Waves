@@ -11,7 +11,7 @@ clc
 
 dir_string = cd;
 
-%% Set Up NCTOOLBOX
+%% Set Up NCTOOLBOX %%
 cd ..\
 addpath(fullfile(cd,'nctoolbox'))
 
@@ -19,10 +19,10 @@ setup_nctoolbox
 
 cd(dir_string)
 
-%% USER ENTERS STATION NUMBER 
-MOPstn = 658:-1:650;
+%% USER ENTERS STATION NUMBER %%
+MOPstn = 658:-1:650;  % 654 Flecther Cove
 
-%% Pull MOP data from THREDDS
+%% Pull MOP data from THREDDS  %%
 
 for i = 1:length(MOPstn)
 
@@ -34,10 +34,10 @@ test_url = [test_url1,num2str(MOPstn(i)),test_url2];
 
 MOP_info = ncinfo(test_url)
 
-Data.Tp(:,i) = ncread(test_url,'waveTp');
-Data.Hs(:,i) = ncread(test_url,'waveHs');
-Data.Time(:,i) = ncread(test_url,'waveTime');
-Data.WD_Peak(:,i) = ncread(test_url,'waveDp');
+Data.Tp(:,i) = ncread(test_url,'waveTp');   % Peak Period
+Data.Hs(:,i) = ncread(test_url,'waveHs');   % Sign. Wave Height
+Data.Time(:,i) = ncread(test_url,'waveTime');  
+Data.WD_Peak(:,i) = ncread(test_url,'waveDp');   % Peak Wave Direction
 
 Data.MOP(1,i) = MOPstn(i);
 Data.Lat(1,i) = ncread(test_url,'metaLatitude');
@@ -48,18 +48,18 @@ Data.Lon(1,i) = ncread(test_url,'metaLongitude');
 end
 
 
-%% Average wave height data
+%% Average Bulk Wave Parameters across all MOPs  %%
 
 MeanWave.Hs = mean(Data.Hs,2);
-Meanwave.Tp = mean(Data.Tp,2);
+MeanWave.Tp = mean(Data.Tp,2);
 MeanWave.WD_peak = mean(Data.WD_Peak,2);
 
-%% Convert to DateTime
+%% Convert to DateTime  (STAYING IN UTC)  %%
 
-Data.DateTime = datetime(Data.Time(:,1),'ConvertFrom','posixtime','TimeZone','UTC');
+Data.DateTime = datetime(Data.Time(:,1),'ConvertFrom','posixtime','TimeZone','UTC');  
 % Data.DateTime.TimeZone = 'America/Los_Angeles';    % Get to Local Datetime.
 
-%%
+%%  OLD PLOT  %%
 figure
 hold on
 plot(Data.DateTime,MeanWave.Hs)
@@ -68,78 +68,80 @@ MonthMask = ismember(month(Data.DateTime),[10 11 12 1]);
 
 plot(Data.DateTime(MonthMask),MeanWave.Hs(MonthMask),'o')
 
-%% Year + Month Mask Plot
-Winter = figure
+%% Initialize Year + Month Mask Figures %%
+
+Winter = figure;    % 
 hold on
-    ylim([1.25 4])
-    title('Winter','FontSize',22,'FontWeight','bold')
-    yline(3,'r--','HandleVisibility','off','LineWidth',1)
-    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
-    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
-    set(gca,'FontSize',18,'FontWeight','bold')
+ylim([1.25 4])
+title('Winter','FontSize',22,'FontWeight','bold')
+yline(3,'r--','HandleVisibility','off','LineWidth',1)
+yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+set(gca,'FontSize',18,'FontWeight','bold')
 
 
-October = figure
+October = figure;
 hold on
-    ylim([1.25 4])
-    title('October','FontSize',22,'FontWeight','bold')
-    set(gca, 'xtick',[])
-    yline(3,'r--','HandleVisibility','off','LineWidth',1)
-    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
-    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
-        set(gca,'FontSize',18,'FontWeight','bold')
+ylim([1.25 4])
+title('October','FontSize',22,'FontWeight','bold')
+set(gca, 'xtick',[])
+yline(3,'r--','HandleVisibility','off','LineWidth',1)
+yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+set(gca,'FontSize',18,'FontWeight','bold')
 
 
-November = figure
+November = figure;
 hold on
-    ylim([1.25 4])
-    title('November','FontSize',22,'FontWeight','bold')
-    set(gca, 'xtick',[])
-    yline(3,'r--','HandleVisibility','off','LineWidth',1)
-    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
-    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
-        set(gca,'FontSize',18,'FontWeight','bold')
+ylim([1.25 4])
+title('November','FontSize',22,'FontWeight','bold')
+set(gca, 'xtick',[])
+yline(3,'r--','HandleVisibility','off','LineWidth',1)
+yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+set(gca,'FontSize',18,'FontWeight','bold')
 
 
-December = figure
+December = figure;
 hold on
-    ylim([1.25 4])
-    title('December','FontSize',22,'FontWeight','bold')
-    set(gca, 'xtick',[])
-    yline(3,'r--','HandleVisibility','off','LineWidth',1)
-    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
-    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
-        set(gca,'FontSize',18,'FontWeight','bold')
+ylim([1.25 4])
+title('December','FontSize',22,'FontWeight','bold')
+set(gca, 'xtick',[])
+yline(3,'r--','HandleVisibility','off','LineWidth',1)
+yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+set(gca,'FontSize',18,'FontWeight','bold')
 
    
-January = figure
+January = figure;
 hold on
-    ylim([1.25 4])
-    title('January','FontSize',22,'FontWeight','bold')
-    set(gca, 'xtick',[])
-    yline(3,'r--','HandleVisibility','off','LineWidth',1)
-    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
-    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
-        set(gca,'FontSize',18,'FontWeight','bold')
+ylim([1.25 4])
+title('January','FontSize',22,'FontWeight','bold')
+set(gca, 'xtick',[])
+yline(3,'r--','HandleVisibility','off','LineWidth',1)
+yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+set(gca,'FontSize',18,'FontWeight','bold')
 
 
-TimeSeries = figure
+TimeSeries = figure;
 hold on
 plot( Data.DateTime(:,1),  MeanWave.Hs,'color',[0 0 0],'LineWidth',1.5,'HandleVisibility','off')
 ylim([0 4])
-    set(gca,'FontSize',18,'FontWeight','bold')
+set(gca,'FontSize',18,'FontWeight','bold')
 
 
-Winter_Hist = figure
+Winter_Hist = figure;
 title('Winter')
-    set(gca,'FontSize',12,'FontWeight','bold')
+set(gca,'FontSize',12,'FontWeight','bold')
 
+%%  Plotting  %%
 
 colors = jet(length(2001:2023));
 
 for year = 2001:2023
 
-    year_prior = year - 2001
+    year_prior = year - 2001;
 
     Oct_Start = posixtime(datetime('2000-10-01 00:00:00') + calyears(year_prior));
     Oct_End =   posixtime(datetime('2000-10-31 23:00:00') + calyears(year_prior));
