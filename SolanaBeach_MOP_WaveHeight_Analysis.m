@@ -1,5 +1,4 @@
-%% Solana Radiaiton Stress Investigation
-
+%% Solana Beach MOP Wave Height Analysis
 % Author: Trenton Saunders
 % Date: 08-05-2024
 
@@ -20,10 +19,8 @@ setup_nctoolbox
 
 cd(dir_string)
 
-%% USER ENTERS STATION NUMBER AND START/END DATES FOR PLOT
+%% USER ENTERS STATION NUMBER 
 MOPstn = 658:-1:650;
-% startdate = '01/01/2021 00:00';
-% enddate = '01/31/2021 23:59';
 
 %% Pull MOP data from THREDDS
 
@@ -72,25 +69,128 @@ MonthMask = ismember(month(Data.DateTime),[10 11 12 1]);
 plot(Data.DateTime(MonthMask),MeanWave.Hs(MonthMask),'o')
 
 %% Year + Month Mask Plot
-figure
+Winter = figure
 hold on
+    ylim([1.25 4])
+    title('Winter','FontSize',22,'FontWeight','bold')
+    yline(3,'r--','HandleVisibility','off','LineWidth',1)
+    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+    set(gca,'FontSize',18,'FontWeight','bold')
 
-colors = jet(length(2001:2022))
 
-for year = 2001:2022
+October = figure
+hold on
+    ylim([1.25 4])
+    title('October','FontSize',22,'FontWeight','bold')
+    set(gca, 'xtick',[])
+    yline(3,'r--','HandleVisibility','off','LineWidth',1)
+    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+        set(gca,'FontSize',18,'FontWeight','bold')
+
+
+November = figure
+hold on
+    ylim([1.25 4])
+    title('November','FontSize',22,'FontWeight','bold')
+    set(gca, 'xtick',[])
+    yline(3,'r--','HandleVisibility','off','LineWidth',1)
+    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+        set(gca,'FontSize',18,'FontWeight','bold')
+
+
+December = figure
+hold on
+    ylim([1.25 4])
+    title('December','FontSize',22,'FontWeight','bold')
+    set(gca, 'xtick',[])
+    yline(3,'r--','HandleVisibility','off','LineWidth',1)
+    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+        set(gca,'FontSize',18,'FontWeight','bold')
+
+   
+January = figure
+hold on
+    ylim([1.25 4])
+    title('January','FontSize',22,'FontWeight','bold')
+    set(gca, 'xtick',[])
+    yline(3,'r--','HandleVisibility','off','LineWidth',1)
+    yline(2.5,'b--','HandleVisibility','off','LineWidth',1)
+    yline(2.19,'k--','HandleVisibility','off','LineWidth',1)
+        set(gca,'FontSize',18,'FontWeight','bold')
+
+
+TimeSeries = figure
+hold on
+plot( Data.DateTime(:,1),  MeanWave.Hs,'color',[0 0 0],'LineWidth',1.5,'HandleVisibility','off')
+ylim([0 4])
+    set(gca,'FontSize',18,'FontWeight','bold')
+
+
+Winter_Hist = figure
+title('Winter')
+    set(gca,'FontSize',12,'FontWeight','bold')
+
+
+colors = jet(length(2001:2023));
+
+for year = 2001:2023
 
     year_prior = year - 2001
 
-    Oct_Start = posixtime(datetime('2000-10-01') + calyears(year_prior))
-    Jan_End = posixtime(datetime('2001-02-01') + calyears(year_prior))
+    Oct_Start = posixtime(datetime('2000-10-01 00:00:00') + calyears(year_prior));
+    Oct_End =   posixtime(datetime('2000-10-31 23:00:00') + calyears(year_prior));
+    Nov_Start = posixtime(datetime('2000-11-01 00:00:00') + calyears(year_prior));
+    Nov_End =   posixtime(datetime('2000-11-30 23:00:00') + calyears(year_prior));
+    Dec_Start = posixtime(datetime('2000-12-01 00:00:00') + calyears(year_prior));
+    Dec_End =   posixtime(datetime('2000-12-31 23:00:00') + calyears(year_prior));
+    Jan_Start = posixtime(datetime('2001-01-01 00:00:00') + calyears(year_prior));
+    Jan_End =   posixtime(datetime('2001-01-31 23:00:00') + calyears(year_prior));
     
-    
-    
-    % plot( Data.DateTime(Data.Time(:,1) > Oct_Start & Data.Time(:,1) < Jan_End),  MeanWave.Hs(Data.Time(:,1) > Oct_Start & Data.Time(:,1) < Jan_End))
 
-    plot( MeanWave.Hs(Data.Time(:,1) > Oct_Start & Data.Time(:,1) < Jan_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', num2str(year))
+    figure(October)
+    plot( MeanWave.Hs(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Oct_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
+    % legend
 
-    legend
+        figure(November)
+    plot( MeanWave.Hs(Data.Time(:,1) >= Nov_Start & Data.Time(:,1) <= Nov_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
+
+    %legend 
+
+        figure(December)
+    plot( MeanWave.Hs(Data.Time(:,1) >= Dec_Start & Data.Time(:,1) <= Dec_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
+
+    % legend 
+
+        figure(January)
+    plot( MeanWave.Hs(Data.Time(:,1) >= Jan_Start & Data.Time(:,1) <= Jan_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
+
+    % legend 
+
+
+    figure(Winter)
+    plot( MeanWave.Hs(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Jan_End) , 'Color', [colors(year_prior+1,:)] , 'DisplayName', [num2str(year-1),'-', num2str(year)],'LineWidth',1.5)
+    % legend
+
+    figure(TimeSeries)
+    plot( Data.DateTime(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Jan_End),  MeanWave.Hs(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Jan_End),'Color', [colors(year_prior+1,:)],'LineWidth',2,'DisplayName', [num2str(year-1),'-', num2str(year)])
+    leg = legend;
+    set(leg,'FontSize',11,'FontWeight','bold')
+
+    figure(Winter_Hist)
+    subplot(6,4,year_prior+1)
+    histogram( MeanWave.Hs(Data.Time(:,1) >= Oct_Start & Data.Time(:,1) <= Jan_End) , 'FaceColor', [colors(year_prior+1,:)] )
+    xlim([0 4])
+    set(gca, 'YScale', 'log')
+
+    xline(3,'r--','LineWidth',1)
+    xline(2.5,'b--','LineWidth',1)
+    xline(2.19,'k--','LineWidth',1)
+
+    
 end
 %%%
 
